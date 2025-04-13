@@ -1,0 +1,47 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: "user-service"
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/user_db} # URL подключения к базе данных
+    username: ${DB_USERNAME:postgres} # Имя пользователя для подключения к базе данных
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true # Включение Flyway для миграций базы данных
+    baseline-on-migrate: true # Установка базовой версии при миграции
+    locations: classpath:db/migration # Путь к файлам миграций
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/user_db} # URL подключения к базе данных для Flyway
+    user: ${DB_USERNAME:postgres} # Имя пользователя для подключения к базе данных для Flyway
+    password: ${DB_PASSWORD:postgres} # Пароль для подключения к базе данных для Flyway
+    schemas: ${DB_SCHEMAS:public} # Схемы базы данных, которые должны быть мигрированы
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+security:
+  keycloak:
+    baseUrl: ${KEYCLOAK_BASE_URL:http://localhost:8088}
+    realm: ${KEYCLOAK_REALM:ecommerce-realm}
+    clientUser:
+      id: ${KEYCLOAK_USER_CLIENT_ID:ecommerce_client}
+      secret: ${KEYCLOAK_USER_CLIENT_SECRET:Aob7naCgV1VvSpgjzSlsA8AQjUhoHmH9}
+    clientAdmin:
+      id: ${KEYCLOAK_ADMIN_CLIENT_ID:admin-cli}
+      secret: ${KEYCLOAK_ADMIN_CLIENT_SECRET:IbT3FtIqDcV8w9B3bllDZi3zqQllnzdq}
+      username: ${KEYCLOAK_ADMIN_USERNAME:admin123@gmail.com}
+      password: ${KEYCLOAK_ADMIN_PASSWORD:sbu&bwln8}
