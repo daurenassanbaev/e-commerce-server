@@ -17,6 +17,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
   flyway:
     enabled: true # Включение Flyway для миграций базы данных
     baseline-on-migrate: true # Установка базовой версии при миграции
