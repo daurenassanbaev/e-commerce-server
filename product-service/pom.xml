@@ -9,13 +9,12 @@
 		<relativePath>../ecommerce-bom/pom.xml</relativePath>
 	</parent>
 	<groupId>com.e-commerce</groupId>
-	<artifactId>user-service</artifactId>
+	<artifactId>product-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>user-service</name>
-	<description>user-service</description>
+	<name>product-service</name>
+	<description>product-service</description>
 	<properties>
 		<flyway-db.version>10.10.0</flyway-db.version>
-		<auth0-java-jwt.version>4.4.0</auth0-java-jwt.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -32,11 +31,15 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-database-postgresql</artifactId>
@@ -48,10 +51,7 @@
 			<artifactId>flyway-core</artifactId>
 			<version>${flyway-db.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-config</artifactId>
@@ -60,16 +60,6 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.auth0</groupId>
-			<artifactId>java-jwt</artifactId>
-			<version>${auth0-java-jwt.version}</version>
-		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -91,11 +81,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-jsr310</artifactId>
-		</dependency>
-
 	</dependencies>
 
 	<build>

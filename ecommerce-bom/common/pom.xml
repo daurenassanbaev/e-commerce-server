@@ -6,30 +6,31 @@
 		<groupId>com.e-commerce</groupId>
 		<artifactId>ecommerce-bom</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../ecommerce-bom/pom.xml</relativePath>
 	</parent>
 	<groupId>com.e-commerce</groupId>
-	<artifactId>config-server</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>config-server</name>
-	<description>config-server</description>
+	<artifactId>common</artifactId>
+	<version>${common-lib.version}</version>
+	<name>common</name>
+	<description>Common project for ecommerce microservices</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-config-server</artifactId>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+			<version>${lombok.version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>${spring-doc.version}</version>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 
 </project>

@@ -1,8 +1,10 @@
 package com.ecommerce.gatewayserver.config;
 
+import com.fasterxml.jackson.databind.ser.AnyGetterWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -15,16 +17,31 @@ import reactor.core.publisher.Mono;
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
-
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity serverHttpSecurity) {
         serverHttpSecurity
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
+                        // Public
                         .pathMatchers("/api/auth/**").permitAll()
-                        .pathMatchers("/api/users/me").authenticated()
-                        .pathMatchers("/api/users/me/**").authenticated()
+                        .pathMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+
+                        // User
+                        .pathMatchers("/api/users/me", "/api/users/me/**").authenticated()
+
+                        // Admin only
                         .pathMatchers("/api/users/**").hasRole("ADMIN")
+
+                        .pathMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.PATCH, "/api/products/**").hasRole("ADMIN")
+
+                        .pathMatchers(HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.PUT, "/api/categories/**").hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.PATCH, "/api/categories/**").hasRole("ADMIN")
+
+                        // Everything else
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oAuth2ResourceServerSpec -> oAuth2ResourceServerSpec
                         .jwt(jwtSpec -> jwtSpec.jwtAuthenticationConverter(grantedAuthoritiesExtractor())));

@@ -1,0 +1,39 @@
+server:
+  port: 8091
+spring:
+  application:
+    name: "product-service"
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/product_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  flyway:
+    enabled: true # Включение Flyway для миграций базы данных
+    baseline-on-migrate: true # Установка базовой версии при миграции
+    locations: classpath:db/migration # Путь к файлам миграций
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/product_db} # URL подключения к базе данных для Flyway
+    user: ${DB_USERNAME:postgres} # Имя пользователя для подключения к базе данных для Flyway
+    password: ${DB_PASSWORD:postgres} # Пароль для подключения к базе данных для Flyway
+    schemas: ${DB_SCHEMAS:public} # Схемы базы данных, которые должны быть мигрированы
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
