@@ -5,7 +5,7 @@ import com.ecommerce.productservice.product.model.entity.Product;
 
 public class ProductConverter {
 
-    public static ProductDto entityToDto(Product product) {
+    public static ProductDto toDto(Product product) {
         ProductDto dto = new ProductDto();
 
         dto.setId(product.getId());
@@ -14,6 +14,8 @@ public class ProductConverter {
         dto.setPrice(product.getPrice());
         dto.setCategoryId(product.getCategoryId());
         dto.setAttributes(product.getAttributes());
+        dto.setCreatedAt(product.getCreatedAt());
+        dto.setUpdatedAt(product.getUpdatedAt());
 
         return dto;
     }

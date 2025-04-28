@@ -17,6 +17,19 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  cloud:
+    stream:
+      bindings:
+        productCreated-out-0:
+          destination: product-created-topic
+        productUpdated-out-0:
+          destination: product-updated-topic
+        productStatusChanged-out-0:
+          destination: product-status-changed-topic
+      kafka:
+        binder:
+          brokers:
+            - localhost:9092
   data:
     redis:
       host: ${REDIS_HOST:localhost}

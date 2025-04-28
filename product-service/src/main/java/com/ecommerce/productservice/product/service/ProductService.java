@@ -1,11 +1,15 @@
 package com.ecommerce.productservice.product.service;
 
 import com.ecommerce.common.dto.response.PagedResponse;
+import com.ecommerce.common.event.product.ProductEvent;
+import com.ecommerce.common.event.product.ProductStatusChangedEvent;
 import com.ecommerce.common.exception.AlreadyActivatedException;
 import com.ecommerce.common.exception.AlreadyArchivedException;
 import com.ecommerce.common.exception.ResourceNotFoundException;
 import com.ecommerce.productservice.category.service.CategoryService;
+import com.ecommerce.productservice.product.messaging.ProductEventProducer;
 import com.ecommerce.productservice.product.model.converter.ProductConverter;
+import com.ecommerce.productservice.product.model.converter.ProductEventConverter;
 import com.ecommerce.productservice.product.model.dto.ProductDto;
 import com.ecommerce.productservice.product.model.dto.request.ProductRequestDto;
 import com.ecommerce.productservice.product.model.entity.Product;
@@ -26,16 +30,17 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
+    private final ProductEventProducer productEventProducer;
 
     public ProductDto getById(Long id) {
-        return ProductConverter.entityToDto(findById(id, true));
+        return ProductConverter.toDto(findById(id, true));
     }
 
     public PagedResponse<ProductDto> getAll(Pageable pageable) {
         Page<Product> page = productRepository.findAllAndIsActive(pageable);
         List<ProductDto> content = page.getContent()
                 .stream()
-                .map(ProductConverter::entityToDto)
+                .map(ProductConverter::toDto)
                 .toList();
         return new PagedResponse<>(
                 content,
@@ -56,7 +61,12 @@ public class ProductService {
         fillProduct(p, dto);
         p.setActive(true);
         p.setCreatedAt(LocalDateTime.now());
-        return ProductConverter.entityToDto(productRepository.save(p));
+        Product product = productRepository.save(p);
+
+        ProductEvent productEvent = ProductEventConverter.toProductEvent(product);
+        productEventProducer.sendProductCreatedEvent(productEvent);
+
+        return ProductConverter.toDto(product);
     }
 
     @Transactional
@@ -67,7 +77,12 @@ public class ProductService {
         Product p = findById(id, true);
         fillProduct(p, dto);
         p.setUpdatedAt(LocalDateTime.now());
-        return ProductConverter.entityToDto(productRepository.save(p));
+        Product product = productRepository.save(p);
+
+        ProductEvent event = ProductEventConverter.toProductEvent(product);
+        productEventProducer.sendProductUpdatedEvent(event);
+
+        return ProductConverter.toDto(product);
     }
 
     @Transactional
@@ -77,7 +92,8 @@ public class ProductService {
             throw new AlreadyArchivedException("Product with ID %d is already archived".formatted(id));
         }
         setActiveStatus(p, false);
-        return ProductConverter.entityToDto(p);
+
+        return ProductConverter.toDto(p);
     }
 
     @Transactional
@@ -87,7 +103,7 @@ public class ProductService {
             throw new AlreadyActivatedException("Product with ID %d is already active".formatted(id));
         }
         setActiveStatus(p, true);
-        return ProductConverter.entityToDto(p);
+        return ProductConverter.toDto(p);
     }
 
     private Product findById(Long id, boolean isActive) {
@@ -106,6 +122,9 @@ public class ProductService {
     private void setActiveStatus(Product p, boolean isActive) {
         p.setActive(isActive);
         p.setUpdatedAt(LocalDateTime.now());
-        productRepository.save(p);
+        Product product = productRepository.save(p);
+
+        ProductStatusChangedEvent event = new ProductStatusChangedEvent(product.getId(), isActive);
+        productEventProducer.sendProductStatusChangedEvent(event);
     }
 }
