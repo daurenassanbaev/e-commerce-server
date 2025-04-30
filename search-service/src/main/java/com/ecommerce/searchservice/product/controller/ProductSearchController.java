@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/products/search")
+@RequestMapping("/api/search/products")
 @RequiredArgsConstructor
 public class ProductSearchController {
 

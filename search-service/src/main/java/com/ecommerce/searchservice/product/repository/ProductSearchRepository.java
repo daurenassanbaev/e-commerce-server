@@ -11,21 +11,33 @@ import org.springframework.stereotype.Repository;
 public interface ProductSearchRepository extends ElasticsearchRepository<ProductDocument, Long> {
 
     @Query("""
-            {
-              "bool": {
-                "must": {
-                  "multi_match": {
-                    "query": "?0",
-                    "fields": ["name", "description", "attributes.*"]
-                  }
-                },
-                "filter": {
-                  "term": {
-                    "is_active": true
-                  }
+        {
+          "bool": {
+            "must": [
+              {
+                "multi_match": {
+                  "query": "?0",
+                  "type": "bool_prefix",
+                  "fields": [
+                    "name",
+                    "name._2gram",
+                    "name._3gram",
+                    "description",
+                    "description._2gram",
+                    "description._3gram",
+                    "attributes.*"
+                  ]
                 }
               }
+            ],
+            "filter": {
+              "term": {
+                "is_active": true
+              }
             }
-            """)
+          }
+        }
+        """)
     Page<ProductDocument> searchByKeyword(String keyword, Pageable pageable);
+
 }
