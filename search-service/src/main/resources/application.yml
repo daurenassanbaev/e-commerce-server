@@ -22,6 +22,8 @@ spring:
         binder:
           brokers:
             - localhost:9092
+  elasticsearch:
+    uris: http://localhost:9200
 server:
   port: 8092
 eureka:
