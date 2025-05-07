@@ -1,0 +1,17 @@
+package com.ecommerce.orderservice.order.service.client;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.UUID;
+
+@FeignClient(name="user-service")
+public interface UserFeignClient {
+
+    @GetMapping("/api/users/internal/keycloak/{keycloakId}")
+    Long getUserByKeycloakId(@PathVariable("keycloakId") UUID keycloakId);
+
+    @GetMapping("/api/users/internal/{userId}/active")
+    Boolean isUserActive(@PathVariable("userId") Long userId);
+}

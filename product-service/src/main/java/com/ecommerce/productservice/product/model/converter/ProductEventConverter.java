@@ -1,6 +1,6 @@
 package com.ecommerce.productservice.product.model.converter;
 
-import com.ecommerce.common.event.product.ProductEvent;
+import com.ecommerce.common.model.event.product.ProductEvent;
 import com.ecommerce.productservice.product.model.entity.Product;
 
 public class ProductEventConverter {

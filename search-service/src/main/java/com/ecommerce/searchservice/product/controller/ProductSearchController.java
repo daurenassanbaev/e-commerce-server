@@ -1,6 +1,6 @@
 package com.ecommerce.searchservice.product.controller;
 
-import com.ecommerce.common.dto.response.PagedResponse;
+import com.ecommerce.common.model.dto.response.PagedResponse;
 import com.ecommerce.searchservice.product.model.dto.ProductSearchDto;
 import com.ecommerce.searchservice.product.service.ProductSearchService;
 import lombok.RequiredArgsConstructor;

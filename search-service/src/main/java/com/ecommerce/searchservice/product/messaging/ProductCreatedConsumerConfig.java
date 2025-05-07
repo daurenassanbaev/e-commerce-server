@@ -1,6 +1,6 @@
 package com.ecommerce.searchservice.product.messaging;
 
-import com.ecommerce.common.event.product.ProductEvent;
+import com.ecommerce.common.model.event.product.ProductEvent;
 import com.ecommerce.searchservice.product.service.ProductSearchService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

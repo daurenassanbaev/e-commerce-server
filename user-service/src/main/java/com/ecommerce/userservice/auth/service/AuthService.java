@@ -1,12 +1,12 @@
 package com.ecommerce.userservice.auth.service;
 
+import com.ecommerce.common.util.JwtUtil;
 import com.ecommerce.userservice.auth.client.KeycloakClient;
 import com.ecommerce.userservice.auth.model.dto.request.LoginRequestDto;
 import com.ecommerce.userservice.auth.model.dto.request.RefreshTokenRequestDto;
 import com.ecommerce.userservice.auth.model.dto.request.RegistrationRequestDto;
 import com.ecommerce.userservice.auth.model.dto.response.JwtAuthenticationResponseDto;
 import com.ecommerce.userservice.user.service.processor.UserRegistrationAsyncProcessor;
-import com.ecommerce.userservice.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

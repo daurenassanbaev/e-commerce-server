@@ -1,7 +1,7 @@
 package com.ecommerce.productservice.product.messaging;
 
-import com.ecommerce.common.event.product.ProductEvent;
-import com.ecommerce.common.event.product.ProductStatusChangedEvent;
+import com.ecommerce.common.model.event.product.ProductEvent;
+import com.ecommerce.common.model.event.product.ProductStatusChangedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;

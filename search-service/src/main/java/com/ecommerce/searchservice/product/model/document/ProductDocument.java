@@ -28,7 +28,7 @@ public class ProductDocument {
     @Field(type = FieldType.Long, name = "category_id")
     private Long categoryId;
 
-    @Field(type = FieldType.Object, name = "attributes")
+    @Field(type = FieldType.Flattened, name = "attributes")
     private Map<String, Object> attributes;
 
     @Field(type = FieldType.Boolean, name = "is_active")

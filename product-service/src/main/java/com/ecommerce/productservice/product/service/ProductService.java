@@ -1,15 +1,18 @@
 package com.ecommerce.productservice.product.service;
 
-import com.ecommerce.common.dto.response.PagedResponse;
-import com.ecommerce.common.event.product.ProductEvent;
-import com.ecommerce.common.event.product.ProductStatusChangedEvent;
+import com.ecommerce.common.model.dto.ProductPriceDto;
+import com.ecommerce.common.model.dto.response.PagedResponse;
+import com.ecommerce.common.model.event.product.ProductEvent;
+import com.ecommerce.common.model.event.product.ProductStatusChangedEvent;
 import com.ecommerce.common.exception.AlreadyActivatedException;
 import com.ecommerce.common.exception.AlreadyArchivedException;
 import com.ecommerce.common.exception.ResourceNotFoundException;
+import com.ecommerce.common.util.PaginationUtil;
 import com.ecommerce.productservice.category.service.CategoryService;
 import com.ecommerce.productservice.product.messaging.ProductEventProducer;
 import com.ecommerce.productservice.product.model.converter.ProductConverter;
 import com.ecommerce.productservice.product.model.converter.ProductEventConverter;
+import com.ecommerce.productservice.product.model.converter.ProductPriceConverter;
 import com.ecommerce.productservice.product.model.dto.ProductDto;
 import com.ecommerce.productservice.product.model.dto.request.ProductRequestDto;
 import com.ecommerce.productservice.product.model.entity.Product;
@@ -38,18 +41,13 @@ public class ProductService {
 
     public PagedResponse<ProductDto> getAll(Pageable pageable) {
         Page<Product> page = productRepository.findAllAndIsActive(pageable);
+
         List<ProductDto> content = page.getContent()
                 .stream()
                 .map(ProductConverter::toDto)
                 .toList();
-        return new PagedResponse<>(
-                content,
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements(),
-                page.getTotalPages(),
-                page.isLast()
-        );
+
+        return PaginationUtil.buildPagedResponse(page, content);
     }
 
     @Transactional
@@ -126,5 +124,12 @@ public class ProductService {
 
         ProductStatusChangedEvent event = new ProductStatusChangedEvent(product.getId(), isActive);
         productEventProducer.sendProductStatusChangedEvent(event);
+    }
+
+    public List<ProductPriceDto> getPrices(List<Long> productIds) {
+        return productRepository.findAllById(productIds)
+                .stream()
+                .map(ProductPriceConverter::toDto)
+                .toList();
     }
 }

@@ -1,6 +1,6 @@
 package com.ecommerce.productservice.common.exception.handler;
 
-import com.ecommerce.common.dto.ErrorResponseDto;
+import com.ecommerce.common.model.dto.ErrorResponseDto;
 import com.ecommerce.common.exception.AlreadyActivatedException;
 import com.ecommerce.common.exception.AlreadyArchivedException;
 import com.ecommerce.common.exception.ResourceNotFoundException;

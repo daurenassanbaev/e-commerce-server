@@ -30,11 +30,13 @@ public interface ProductSearchRepository extends ElasticsearchRepository<Product
                 }
               }
             ],
-            "filter": {
-              "term": {
-                "is_active": true
+            "filter": [
+              {
+                "term": {
+                  "is_active": true
+                }
               }
-            }
+            ]
           }
         }
         """)

@@ -1,7 +1,8 @@
 package com.ecommerce.productservice.product.controller;
 
 
-import com.ecommerce.common.dto.response.PagedResponse;
+import com.ecommerce.common.model.dto.ProductPriceDto;
+import com.ecommerce.common.model.dto.response.PagedResponse;
 import com.ecommerce.productservice.product.model.dto.ProductDto;
 import com.ecommerce.productservice.product.model.dto.request.ProductRequestDto;
 import com.ecommerce.productservice.product.service.ProductService;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -45,5 +48,10 @@ public class ProductController {
     @PatchMapping("/{id}/activate")
     public ResponseEntity<ProductDto> activate(@PathVariable("id") Long id) {
         return ResponseEntity.ok(productService.activate(id));
+    }
+
+    @PostMapping("/internal/prices")
+    public List<ProductPriceDto> getPrices(List<Long> productIds) {
+        return productService.getPrices(productIds);
     }
 }

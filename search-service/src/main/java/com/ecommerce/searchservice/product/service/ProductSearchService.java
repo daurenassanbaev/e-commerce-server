@@ -1,9 +1,10 @@
 package com.ecommerce.searchservice.product.service;
 
-import com.ecommerce.common.dto.response.PagedResponse;
-import com.ecommerce.common.event.product.ProductEvent;
-import com.ecommerce.common.event.product.ProductStatusChangedEvent;
+import com.ecommerce.common.model.dto.response.PagedResponse;
+import com.ecommerce.common.model.event.product.ProductEvent;
+import com.ecommerce.common.model.event.product.ProductStatusChangedEvent;
 import com.ecommerce.common.exception.ResourceNotFoundException;
+import com.ecommerce.common.util.PaginationUtil;
 import com.ecommerce.searchservice.product.model.converter.ProductSearchConverter;
 import com.ecommerce.searchservice.product.model.document.ProductDocument;
 import com.ecommerce.searchservice.product.model.dto.ProductSearchDto;
@@ -28,14 +29,7 @@ public class ProductSearchService {
                 .map(ProductSearchConverter::toDto)
                 .toList();
 
-        return new PagedResponse<>(
-                content,
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements(),
-                page.getTotalPages(),
-                page.isLast()
-        );
+        return PaginationUtil.buildPagedResponse(page, content);
     }
 
     public void save(ProductEvent event) {

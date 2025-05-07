@@ -3,13 +3,13 @@ package com.ecommerce.userservice.user.service;
 import com.ecommerce.common.exception.AlreadyActivatedException;
 import com.ecommerce.common.exception.AlreadyArchivedException;
 import com.ecommerce.common.exception.ResourceNotFoundException;
+import com.ecommerce.common.util.JwtUtil;
 import com.ecommerce.userservice.auth.client.KeycloakClient;
 import com.ecommerce.userservice.user.model.converter.UserConverter;
 import com.ecommerce.userservice.user.model.dto.request.UpdateUserRequestDto;
 import com.ecommerce.userservice.user.model.dto.UserDto;
 import com.ecommerce.userservice.user.model.entity.User;
 import com.ecommerce.userservice.user.repository.UserRepository;
-import com.ecommerce.userservice.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -37,6 +37,11 @@ public class UserService {
     @Cacheable(value = "users", key = "#id")
     public UserDto getById(Long id) {
         return UserConverter.entityToDto(findById(id, true));
+    }
+
+    public Long getUserIdByKeycloakId(UUID keycloakId) {
+        return userRepository.findUserIdByKeycloakId(keycloakId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "keycloakId", keycloakId.toString()));
     }
 
     public UserDto getMe(String token) {
@@ -84,6 +89,10 @@ public class UserService {
         return UserConverter.entityToDto(user);
     }
 
+    public Boolean isUserActive(Long userId) {
+        return findById(userId, true).isActive();
+    }
+
     private User findById(Long id, boolean isActive) {
         return userRepository.findByIdAndIsActive(id, isActive)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "UserId", id.toString()));
@@ -110,4 +119,6 @@ public class UserService {
         user.setUpdatedAt(LocalDateTime.now());
         userRepository.save(user);
     }
+
+
 }

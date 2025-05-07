@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -50,5 +52,15 @@ public class UserController {
     @PatchMapping("/{id}/activate")
     public ResponseEntity<UserDto> activate(@PathVariable Long id) {
         return ResponseEntity.ok(userService.activate(id));
+    }
+
+    @GetMapping("/internal/keycloak/{keycloakId}")
+    public ResponseEntity<Long> getUserIdByKeycloakId(@PathVariable("keycloakId") UUID keycloakId) {
+        return ResponseEntity.ok(userService.getUserIdByKeycloakId(keycloakId));
+    }
+
+    @GetMapping("/internal/{userId}/active")
+    public ResponseEntity<Boolean> isUserActive(Long userId) {
+        return ResponseEntity.ok(userService.isUserActive(userId));
     }
 }

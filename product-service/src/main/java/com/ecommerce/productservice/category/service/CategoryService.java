@@ -1,17 +1,15 @@
 package com.ecommerce.productservice.category.service;
 
-import com.ecommerce.common.dto.response.PagedResponse;
+import com.ecommerce.common.model.dto.response.PagedResponse;
 import com.ecommerce.common.exception.AlreadyActivatedException;
 import com.ecommerce.common.exception.AlreadyArchivedException;
 import com.ecommerce.common.exception.ResourceNotFoundException;
+import com.ecommerce.common.util.PaginationUtil;
 import com.ecommerce.productservice.category.model.converter.CategoryConverter;
 import com.ecommerce.productservice.category.model.dto.CategoryDto;
 import com.ecommerce.productservice.category.model.dto.request.CategoryRequestDto;
 import com.ecommerce.productservice.category.model.entity.Category;
 import com.ecommerce.productservice.category.repository.CategoryRepository;
-import com.ecommerce.productservice.product.model.converter.ProductConverter;
-import com.ecommerce.productservice.product.model.dto.ProductDto;
-import com.ecommerce.productservice.product.model.entity.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,14 +36,7 @@ public class CategoryService {
                 .stream()
                 .map(CategoryConverter::entityToDto)
                 .toList();
-        return new PagedResponse<>(
-                content,
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements(),
-                page.getTotalPages(),
-                page.isLast()
-        );
+        return PaginationUtil.buildPagedResponse(page, content);
     }
 
     @Transactional

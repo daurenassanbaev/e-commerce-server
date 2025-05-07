@@ -1,6 +1,6 @@
 package com.ecommerce.productservice.category.controller;
 
-import com.ecommerce.common.dto.response.PagedResponse;
+import com.ecommerce.common.model.dto.response.PagedResponse;
 import com.ecommerce.productservice.category.model.dto.CategoryDto;
 import com.ecommerce.productservice.category.model.dto.request.CategoryRequestDto;
 import com.ecommerce.productservice.category.service.CategoryService;
