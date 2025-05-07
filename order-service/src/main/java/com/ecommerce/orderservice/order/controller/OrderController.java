@@ -31,7 +31,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getById(id));
     }
 
-    @PostMapping
+    @PostMapping("/internal")
     public ResponseEntity<OrderResponseDto> create(@RequestBody OrderRequestDto orderDto) {
         return ResponseEntity.ok(orderSagaOrchestrator.create(orderDto));
     }

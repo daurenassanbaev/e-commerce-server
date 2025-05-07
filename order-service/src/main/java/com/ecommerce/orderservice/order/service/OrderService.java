@@ -1,20 +1,14 @@
 package com.ecommerce.orderservice.order.service;
 
-import com.ecommerce.common.exception.AlreadyArchivedException;
-import com.ecommerce.common.model.dto.ProductPriceDto;
-import com.ecommerce.common.model.dto.request.OrderItemRequestDto;
-import com.ecommerce.common.model.dto.request.OrderRequestDto;
 import com.ecommerce.common.model.dto.response.OrderResponseDto;
 import com.ecommerce.common.model.dto.response.PagedResponse;
 import com.ecommerce.common.exception.ResourceNotFoundException;
 import com.ecommerce.common.util.JwtUtil;
 import com.ecommerce.common.util.PaginationUtil;
-import com.ecommerce.orderservice.order.exception.EmptyOrderItemException;
 import com.ecommerce.orderservice.order.model.converter.OrderConverter;
 import com.ecommerce.orderservice.order.model.dto.OrderDto;
 import com.ecommerce.orderservice.order.model.dto.request.OrderStatusUpdateRequestDto;
 import com.ecommerce.orderservice.order.model.entity.Order;
-import com.ecommerce.orderservice.order.model.enums.OrderStatus;
 import com.ecommerce.orderservice.order.repository.OrderRepository;
 import com.ecommerce.orderservice.order.service.client.ProductFeignClient;
 import com.ecommerce.orderservice.order.service.client.UserFeignClient;
@@ -26,12 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +31,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemService orderItemService;
     private final UserFeignClient userFeignClient;
-    private final ProductFeignClient productFeignClient;
 
     public PagedResponse<OrderDto> getAll(String token, Pageable pageable) {
         Long userId = extractUserId(token);
