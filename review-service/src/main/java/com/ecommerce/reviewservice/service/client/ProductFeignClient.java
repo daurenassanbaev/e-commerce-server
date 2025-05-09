@@ -1,4 +1,4 @@
-package com.ecommerce.cartservice.service.client;
+package com.ecommerce.reviewservice.service.client;
 
 import com.ecommerce.common.model.dto.response.ProductStatusResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;

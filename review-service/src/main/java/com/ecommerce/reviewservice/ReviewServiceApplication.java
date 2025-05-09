@@ -1,15 +1,15 @@
-package com.ecommerce.cartservice;
+package com.ecommerce.reviewservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients(basePackages = "com.ecommerce.cartservice.service.client")
-public class CartServiceApplication {
+@EnableFeignClients(basePackages = "com.ecommerce.reviewservice.service.client")
+public class ReviewServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CartServiceApplication.class, args);
+		SpringApplication.run(ReviewServiceApplication.class, args);
 	}
 
 }
