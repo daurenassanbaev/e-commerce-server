@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface InventoryFeignClient {
 
     @PostMapping("/api/inventory/internal/{productId}/reserve")
-    ReserveResponseDto reserve(@PathVariable Long productId, @RequestBody ReserveRequestDto request);
+    ReserveResponseDto reserve(@PathVariable("productId") Long productId, @RequestBody ReserveRequestDto request);
 
     @PostMapping("/api/inventory/internal/{productId}/release")
-    ReleaseResponseDto release(@PathVariable Long productId, @RequestBody ReleaseRequestDto releaseRequestDto);
+    ReleaseResponseDto release(@PathVariable("productId") Long productId, @RequestBody ReleaseRequestDto releaseRequestDto);
 }

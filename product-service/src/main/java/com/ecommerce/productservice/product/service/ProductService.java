@@ -1,7 +1,9 @@
 package com.ecommerce.productservice.product.service;
 
 import com.ecommerce.common.model.dto.ProductPriceDto;
+import com.ecommerce.common.model.dto.request.ProductIdsRequestDto;
 import com.ecommerce.common.model.dto.response.PagedResponse;
+import com.ecommerce.common.model.dto.response.ProductStatusResponseDto;
 import com.ecommerce.common.model.event.product.ProductEvent;
 import com.ecommerce.common.model.event.product.ProductStatusChangedEvent;
 import com.ecommerce.common.exception.AlreadyActivatedException;
@@ -20,6 +22,7 @@ import com.ecommerce.productservice.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,6 +107,24 @@ public class ProductService {
         return ProductConverter.toDto(p);
     }
 
+    public List<ProductPriceDto> getPrices(ProductIdsRequestDto productIds) {
+        return productRepository.findAllByIdAndIsActive(productIds.getProductIds(), true)
+                .stream()
+                .map(ProductPriceConverter::toDto)
+                .toList();
+    }
+
+    public ProductStatusResponseDto getProductStatus(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "ID", productId.toString()));
+
+        ProductStatusResponseDto dto = new ProductStatusResponseDto();
+        dto.setProductId(productId);
+        dto.setIsActive(product.isActive());
+
+        return dto;
+    }
+
     private Product findById(Long id, boolean isActive) {
         return productRepository.findByIdAndIsActive(id, isActive)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "ID", id.toString()));
@@ -124,12 +145,5 @@ public class ProductService {
 
         ProductStatusChangedEvent event = new ProductStatusChangedEvent(product.getId(), isActive);
         productEventProducer.sendProductStatusChangedEvent(event);
-    }
-
-    public List<ProductPriceDto> getPrices(List<Long> productIds) {
-        return productRepository.findAllById(productIds)
-                .stream()
-                .map(ProductPriceConverter::toDto)
-                .toList();
     }
 }

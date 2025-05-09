@@ -1,12 +1,11 @@
 package com.ecommerce.orderservice.order.saga;
 
+import com.ecommerce.common.exception.AlreadyArchivedException;
 import com.ecommerce.common.exception.ResourceNotFoundException;
 import com.ecommerce.common.model.dto.ProductPriceDto;
-import com.ecommerce.common.model.dto.request.OrderItemRequestDto;
-import com.ecommerce.common.model.dto.request.OrderRequestDto;
-import com.ecommerce.common.model.dto.request.ReleaseRequestDto;
-import com.ecommerce.common.model.dto.request.ReserveRequestDto;
+import com.ecommerce.common.model.dto.request.*;
 import com.ecommerce.common.model.dto.response.OrderResponseDto;
+import com.ecommerce.common.model.dto.response.ReserveResponseDto;
 import com.ecommerce.orderservice.order.exception.EmptyOrderItemException;
 import com.ecommerce.orderservice.order.exception.InventoryReserveException;
 import com.ecommerce.orderservice.order.exception.OrderCreationException;
@@ -49,7 +48,8 @@ public class OrderSagaOrchestrator {
         List<Long> productIds = extractProductIds(orderDto);
 
         // Get product prices & price map
-        List<ProductPriceDto> prices = productFeignClient.getPrices(productIds);
+        ProductIdsRequestDto productIdsRequestDto = new ProductIdsRequestDto(productIds);
+        List<ProductPriceDto> prices = productFeignClient.getPrices(productIdsRequestDto);
         Map<Long, BigDecimal> priceMap = collectPriceMap(prices);
 
         // Reserve products
@@ -100,10 +100,13 @@ public class OrderSagaOrchestrator {
     private void reserveProducts(List<OrderItemRequestDto> items) {
         try {
             for (OrderItemRequestDto item : items) {
-                inventoryFeignClient.reserve(item.getProductId(), new ReserveRequestDto(item.getQuantity()));
+                ReserveResponseDto dto = inventoryFeignClient.reserve(item.getProductId(), new ReserveRequestDto(item.getQuantity()));
+                if (!dto.getSuccess()) {
+                    throw new InventoryReserveException("Failed to reserve inventory: no products available in inventory.");
+                }
             }
         } catch (Exception e) {
-            throw new InventoryReserveException("Failed to reserve inventory");
+            throw new InventoryReserveException("Failed to reserve inventory.");
         }
     }
 

@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,4 +20,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "SELECT * FROM products p WHERE p.is_active = true", nativeQuery = true)
     Page<Product> findAllAndIsActive(Pageable pageable);
+
+    @Query(value = "SELECT * FROM products p WHERE p.is_active = true AND p.id IN :productIds", nativeQuery = true)
+    List<Product> findAllByIdAndIsActive(@Param("productIds") List<Long> productIds, @Param("b") boolean b);
 }

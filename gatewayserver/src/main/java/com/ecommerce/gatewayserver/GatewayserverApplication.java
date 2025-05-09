@@ -25,6 +25,15 @@ public class GatewayserverApplication {
                 .route("search-service", r -> r.path("/api/search/**")
                         .uri("lb://SEARCH-SERVICE")
                 )
+                .route("inventory-service", r -> r.path("/api/inventory/**")
+                        .uri("lb://INVENTORY-SERVICE")
+                )
+                .route("order-service", r -> r.path("/api/orders/**")
+                        .uri("lb://ORDER-SERVICE")
+                )
+                .route("cart-service", r -> r.path("/api/cart/**")
+                        .uri("lb://CART-SERVICE")
+                )
                 .build();
     }
 }

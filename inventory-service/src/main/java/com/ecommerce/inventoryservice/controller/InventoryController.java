@@ -19,7 +19,7 @@ public class InventoryController {
     private final InventoryService inventoryService;
 
     @GetMapping("/{productId}")
-    public ResponseEntity<InventoryResponseDto> getInventory(@PathVariable Long productId) {
+    public ResponseEntity<InventoryResponseDto> getInventory(@PathVariable("productId") Long productId) {
         return ResponseEntity.ok(inventoryService.getInventory(productId));
     }
 
@@ -32,7 +32,7 @@ public class InventoryController {
 
     @PostMapping("/internal/{productId}/reserve")
     public ResponseEntity<ReserveResponseDto> reserve(
-            @PathVariable Long productId,
+            @PathVariable("productId") Long productId,
             @RequestBody ReserveRequestDto request
     ) {
         return ResponseEntity.ok(inventoryService.reserve(productId, request.getQuantity()));
@@ -40,7 +40,7 @@ public class InventoryController {
 
     @PostMapping("/internal/{productId}/release")
     public ResponseEntity<ReleaseResponseDto> release(
-            @PathVariable Long productId,
+            @PathVariable("productId") Long productId,
             @RequestBody ReleaseRequestDto request
     ) {
         return ResponseEntity.ok(inventoryService.release(productId, request.getQuantity()));

@@ -2,7 +2,9 @@ package com.ecommerce.productservice.product.controller;
 
 
 import com.ecommerce.common.model.dto.ProductPriceDto;
+import com.ecommerce.common.model.dto.request.ProductIdsRequestDto;
 import com.ecommerce.common.model.dto.response.PagedResponse;
+import com.ecommerce.common.model.dto.response.ProductStatusResponseDto;
 import com.ecommerce.productservice.product.model.dto.ProductDto;
 import com.ecommerce.productservice.product.model.dto.request.ProductRequestDto;
 import com.ecommerce.productservice.product.service.ProductService;
@@ -51,7 +53,12 @@ public class ProductController {
     }
 
     @PostMapping("/internal/prices")
-    public List<ProductPriceDto> getPrices(List<Long> productIds) {
+    public List<ProductPriceDto> getPrices(@RequestBody ProductIdsRequestDto productIds) {
         return productService.getPrices(productIds);
+    }
+
+    @GetMapping("/internal/{id}/status")
+    public ResponseEntity<ProductStatusResponseDto> getProductStatus(@PathVariable("id") Long productId) {
+        return ResponseEntity.ok(productService.getProductStatus(productId));
     }
 }

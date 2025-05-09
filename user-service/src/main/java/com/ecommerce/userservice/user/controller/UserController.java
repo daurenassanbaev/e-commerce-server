@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @GetMapping("/internal/{userId}/active")
-    public ResponseEntity<Boolean> isUserActive(Long userId) {
+    public ResponseEntity<Boolean> isUserActive(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(userService.isUserActive(userId));
     }
 }
