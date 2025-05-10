@@ -1,6 +1,5 @@
 package com.ecommerce.gatewayserver.config;
 
-import com.fasterxml.jackson.databind.ser.AnyGetterWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
