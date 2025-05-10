@@ -1,18 +1,5 @@
-server:
-  port: 8096
 spring:
   application:
-    name: "review-service"
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/review_db
+    name: review-service
   config:
     import: "optional:configserver:http://localhost:8071/"
-eureka:
-  instance:
-    preferIpAddress: true
-  client:
-    fetchRegistry: true
-    registerWithEureka: true
-    serviceUrl:
-      defaultZone: http://localhost:8070/eureka/

@@ -3,10 +3,14 @@ package com.ecommerce.reviewservice.service;
 import com.ecommerce.common.exception.ResourceNotFoundException;
 import com.ecommerce.common.model.dto.response.PagedResponse;
 import com.ecommerce.common.model.dto.response.ProductStatusResponseDto;
+import com.ecommerce.common.model.event.review.ReviewDeletedEvent;
+import com.ecommerce.common.model.event.review.ReviewEvent;
 import com.ecommerce.common.util.JwtUtil;
 import com.ecommerce.common.util.PaginationUtil;
 import com.ecommerce.reviewservice.exception.DuplicateReviewException;
+import com.ecommerce.reviewservice.messaging.ReviewEventProducer;
 import com.ecommerce.reviewservice.model.converter.ReviewConverter;
+import com.ecommerce.reviewservice.model.converter.ReviewEventConverter;
 import com.ecommerce.reviewservice.model.document.Review;
 import com.ecommerce.reviewservice.model.dto.request.ReviewRequestDto;
 import com.ecommerce.reviewservice.model.dto.response.ReviewResponseDto;
@@ -31,6 +35,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserFeignClient userFeignClient;
     private final ProductFeignClient productFeignClient;
+    private final ReviewEventProducer reviewEventProducer;
 
     public PagedResponse<ReviewResponseDto> getAllByProductId(Long productId, Pageable pageable) {
         Page<Review> page = reviewRepository.findAllByProductId(productId, pageable);
@@ -53,12 +58,21 @@ public class ReviewService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return ReviewConverter.toDto(reviewRepository.save(review));
+        Review savedReview = reviewRepository.save(review);
+
+        ReviewEvent reviewEvent = ReviewEventConverter.toReviewEvent(savedReview);
+        reviewEventProducer.sendReviewCreatedEvent(reviewEvent);
+
+        return ReviewConverter.toDto(savedReview);
     }
 
     @Transactional
     public void deleteReview(String reviewId) {
         Review review = getReviewOrThrow(reviewId);
+
+        ReviewDeletedEvent deletedEvent = new ReviewDeletedEvent(review.getId());
+        reviewEventProducer.sendReviewDeletedEvent(deletedEvent);
+
         reviewRepository.delete(review);
     }
 

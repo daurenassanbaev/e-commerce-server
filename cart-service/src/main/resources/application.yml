@@ -1,20 +1,5 @@
-server:
-  port: 8095
 spring:
   application:
-    name: "cart-service"
+    name: cart-service
   config:
     import: "optional:configserver:http://localhost:8071/"
-  data:
-    redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
-      connect-timeout: ${REDIS_TIMEOUT:60000}
-eureka:
-  instance:
-    preferIpAddress: true
-  client:
-    fetchRegistry: true
-    registerWithEureka: true
-    serviceUrl:
-      defaultZone: http://localhost:8070/eureka/

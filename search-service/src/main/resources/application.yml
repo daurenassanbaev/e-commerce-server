@@ -3,35 +3,3 @@ spring:
     name: search-service
   config:
     import: "optional:configserver:http://localhost:8071/"
-  cloud:
-    function:
-      definition:
-        productCreatedConsumer;productUpdatedConsumer;productStatusChangedConsumer
-    stream:
-      bindings:
-        productCreatedConsumer-in-0:
-          destination: product-created-topic
-          group: ${spring.application.name}
-        productUpdatedConsumer-in-0:
-          destination: product-updated-topic
-          group: ${spring.application.name}
-        productStatusChangedConsumer-in-0:
-          destination: product-status-changed-topic
-          group: ${spring.application.name}
-      kafka:
-        binder:
-          brokers:
-            - localhost:9092
-  elasticsearch:
-    uris: http://localhost:9200
-server:
-  port: 8092
-eureka:
-  instance:
-    preferIpAddress: true
-  client:
-    fetchRegistry: true
-    registerWithEureka: true
-    serviceUrl:
-      defaultZone: http://localhost:8070/eureka/
-
